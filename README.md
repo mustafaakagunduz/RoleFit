@@ -109,7 +109,4 @@ Koyu tema:
 
 ![Dark mode](docs/screenshots/dark-mode.png)
 
-## Neden bu kararlar?
 
-Önemli teknik kararlar (ve neden alındıkları) `docs/DECISIONS.md`'de kayıtlı
-tutuluyor; bu dosya şu an public repoya dahil değil.
