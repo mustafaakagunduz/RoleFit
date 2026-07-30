@@ -1,0 +1,23 @@
+# .NET
+bin/
+obj/
+*.user
+appsettings.*.local.json
+appsettings.Development.json
+
+# Frontend
+web/node_modules/
+web/dist/
+
+# Secrets / env
+.env
+.env.*
+
+# Markdown docs (kept local only, not pushed to repo)
+*.md
+
+# OS / editor
+.DS_Store
+.vs/
+.vscode/
+.idea/
