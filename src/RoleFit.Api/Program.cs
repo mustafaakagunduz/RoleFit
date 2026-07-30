@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<RoleFit.Api.Services.IFitAnalyzer, RoleFit.Api.Services.FitAnalyzer>();
 
 var app = builder.Build();
 
