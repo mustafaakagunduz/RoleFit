@@ -29,7 +29,14 @@ public class AnalyzeController : ControllerBase
             return Problem(detail: "jobDescription boş olamaz.", statusCode: StatusCodes.Status400BadRequest);
         }
 
-        var result = await _fitAnalyzer.AnalyzeAsync(request.CvText, request.JobDescription, cancellationToken);
-        return Ok(result);
+        try
+        {
+            var result = await _fitAnalyzer.AnalyzeAsync(request.CvText, request.JobDescription, cancellationToken);
+            return Ok(result);
+        }
+        catch (LlmAnalysisException ex)
+        {
+            return Problem(detail: ex.Message, statusCode: StatusCodes.Status502BadGateway);
+        }
     }
 }

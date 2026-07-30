@@ -19,6 +19,14 @@ public class AnalyzeControllerTests
         }
     }
 
+    private class FailingAnalyzer : IFitAnalyzer
+    {
+        public Task<FitResult> AnalyzeAsync(string cvText, string jobDescription, CancellationToken cancellationToken = default)
+        {
+            throw new LlmAnalysisException("provider down");
+        }
+    }
+
     [Fact]
     public async Task Analyze_WithValidInput_ReturnsFitResult()
     {
@@ -43,5 +51,16 @@ public class AnalyzeControllerTests
 
         var objectResult = Assert.IsAssignableFrom<ObjectResult>(response.Result);
         Assert.Equal(StatusCodes.Status400BadRequest, objectResult.StatusCode);
+    }
+
+    [Fact]
+    public async Task Analyze_WhenAnalyzerThrowsLlmAnalysisException_ReturnsBadGateway()
+    {
+        var controller = new AnalyzeController(new FailingAnalyzer());
+
+        var response = await controller.Analyze(new AnalyzeRequest("CV metni", "İlan metni"), CancellationToken.None);
+
+        var objectResult = Assert.IsAssignableFrom<ObjectResult>(response.Result);
+        Assert.Equal(StatusCodes.Status502BadGateway, objectResult.StatusCode);
     }
 }

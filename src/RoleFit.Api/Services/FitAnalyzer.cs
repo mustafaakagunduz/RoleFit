@@ -1,31 +1,48 @@
+using System.Text.Json;
 using RoleFit.Api.Domain;
+using RoleFit.Api.Prompts;
 
 namespace RoleFit.Api.Services;
 
-/// <summary>Stub implementation; Faz 3'te gerçek bir LLM çağrısıyla değiştirilecek.</summary>
 public class FitAnalyzer : IFitAnalyzer
 {
-    public Task<FitResult> AnalyzeAsync(string cvText, string jobDescription, CancellationToken cancellationToken = default)
+    private static readonly JsonSerializerOptions JsonOptions = new()
     {
-        var result = new FitResult(
-            OverallScore: 72,
-            Verdict: "moderate",
-            Summary: "Aday, rolün beklediği temel becerilerin çoğunu karşılıyor; bazı alanlarda deneyim eksikliği var.",
-            MatchedSkills:
-            [
-                new SkillMatch("C#", "CV'de 3 yıl C#/.NET deneyimi belirtilmiş."),
-                new SkillMatch("REST API", "CV'de ASP.NET Core ile API geliştirme deneyimi var.")
-            ],
-            Gaps:
-            [
-                new Gap("Docker", "important", "Küçük bir projeyi containerize ederek Docker deneyimi kazan ve CV'ye ekle."),
-                new Gap("Bulut deneyimi (Azure/AWS)", "nice_to_have", "Ücretsiz katmanda basit bir deploy yaparak temel bulut deneyimi edin.")
-            ],
-            SuggestedBullets:
-            [
-                "ASP.NET Core Web API ile uçtan uca bir servis geliştirip cloud'a deploy etti."
-            ]);
+        PropertyNameCaseInsensitive = true,
+    };
 
-        return Task.FromResult(result);
+    private readonly ILlmClient _llmClient;
+
+    public FitAnalyzer(ILlmClient llmClient)
+    {
+        _llmClient = llmClient;
+    }
+
+    public async Task<FitResult> AnalyzeAsync(string cvText, string jobDescription, CancellationToken cancellationToken = default)
+    {
+        var systemPrompt = FitResultPrompts.BuildSystemPrompt();
+        var userPrompt = FitResultPrompts.BuildUserPrompt(cvText, jobDescription);
+
+        var rawJson = await _llmClient.GetStructuredCompletionAsync(
+            systemPrompt,
+            userPrompt,
+            FitResultPrompts.SchemaName,
+            FitResultPrompts.JsonSchema,
+            cancellationToken);
+
+        try
+        {
+            var result = JsonSerializer.Deserialize<FitResult>(rawJson, JsonOptions);
+            if (result is null)
+            {
+                throw new LlmAnalysisException("LLM yanıtı boş bir sonuca dönüştü.");
+            }
+
+            return result;
+        }
+        catch (JsonException ex)
+        {
+            throw new LlmAnalysisException("LLM yanıtı beklenen FitResult şemasıyla eşleşmiyor.", ex);
+        }
     }
 }
