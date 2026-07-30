@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { HealthStatus } from './components/HealthStatus'
 import { AnalyzeForm } from './components/AnalyzeForm'
 import { FitResultPanel } from './components/FitResultPanel'
+import { ThemeToggle } from './components/ThemeToggle'
 import { analyze, type FitResult } from './api/analyze'
 import './App.css'
 
@@ -26,6 +27,9 @@ function App() {
 
   return (
     <div className="page">
+      <div className="theme-toggle-slot">
+        <ThemeToggle />
+      </div>
       <header className="page-header">
         <h1>RoleFit</h1>
         <p className="tagline">
