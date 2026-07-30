@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import './AnalyzeForm.css'
 
 interface AnalyzeFormProps {
   onSubmit: (cvText: string, jobDescription: string) => void
@@ -18,24 +19,32 @@ export function AnalyzeForm({ onSubmit, disabled }: AnalyzeFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="cvText">CV</label>
-      <textarea
-        id="cvText"
-        value={cvText}
-        onChange={(e) => setCvText(e.target.value)}
-        rows={8}
-      />
+    <form className="analyze-form" onSubmit={handleSubmit}>
+      <div className="analyze-form__fields">
+        <div className="analyze-form__field">
+          <label htmlFor="cvText">CV</label>
+          <textarea
+            id="cvText"
+            placeholder="CV metnini buraya yapıştır..."
+            value={cvText}
+            onChange={(e) => setCvText(e.target.value)}
+            rows={10}
+          />
+        </div>
 
-      <label htmlFor="jobDescription">İlan</label>
-      <textarea
-        id="jobDescription"
-        value={jobDescription}
-        onChange={(e) => setJobDescription(e.target.value)}
-        rows={8}
-      />
+        <div className="analyze-form__field">
+          <label htmlFor="jobDescription">İlan</label>
+          <textarea
+            id="jobDescription"
+            placeholder="İş ilanı metnini buraya yapıştır..."
+            value={jobDescription}
+            onChange={(e) => setJobDescription(e.target.value)}
+            rows={10}
+          />
+        </div>
+      </div>
 
-      <button type="submit" disabled={!canSubmit}>
+      <button type="submit" className="analyze-form__submit" disabled={!canSubmit}>
         Analiz et
       </button>
     </form>

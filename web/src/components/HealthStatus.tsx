@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { fetchHealth, type HealthResponse } from '../api/health'
+import './HealthStatus.css'
 
 type LoadState =
   | { kind: 'loading' }
@@ -16,16 +17,27 @@ export function HealthStatus() {
   }, [])
 
   if (state.kind === 'loading') {
-    return <p>Backend durumu kontrol ediliyor...</p>
+    return (
+      <span className="health-pill health-pill--loading">
+        <span className="health-dot" />
+        Backend durumu kontrol ediliyor...
+      </span>
+    )
   }
 
   if (state.kind === 'error') {
-    return <p role="alert">Backend'e ulaşılamadı: {state.message}</p>
+    return (
+      <span className="health-pill health-pill--error" role="alert">
+        <span className="health-dot" />
+        Backend'e ulaşılamadı: {state.message}
+      </span>
+    )
   }
 
   return (
-    <p>
-      Backend durumu: {state.data.status} (v{state.data.version}, {state.data.utc})
-    </p>
+    <span className="health-pill health-pill--success">
+      <span className="health-dot" />
+      Backend durumu: {state.data.status} (v{state.data.version})
+    </span>
   )
 }

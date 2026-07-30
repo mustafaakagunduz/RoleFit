@@ -25,14 +25,28 @@ function App() {
   }
 
   return (
-    <main>
-      <h1>RoleFit</h1>
-      <HealthStatus />
+    <div className="page">
+      <header className="page-header">
+        <h1>RoleFit</h1>
+        <p className="tagline">
+          CV'ni ve bir iş ilanını yapıştır; yapay zekâ uyum skorunu, eşleşen becerileri ve
+          kapatman gereken açıkları senin için çıkarsın.
+        </p>
+        <div className="status-banner">
+          <HealthStatus />
+        </div>
+      </header>
+
       <AnalyzeForm onSubmit={handleSubmit} disabled={state.kind === 'loading'} />
-      {state.kind === 'loading' && <p>Analiz ediliyor...</p>}
-      {state.kind === 'error' && <p role="alert">{state.message}</p>}
+
+      {state.kind === 'loading' && <p className="loading-hint">Analiz ediliyor…</p>}
+      {state.kind === 'error' && (
+        <p className="error-banner" role="alert">
+          {state.message}
+        </p>
+      )}
       {state.kind === 'success' && <FitResultPanel result={state.data} />}
-    </main>
+    </div>
   )
 }
 
