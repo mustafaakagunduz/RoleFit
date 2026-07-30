@@ -13,8 +13,9 @@ web/dist/
 .env
 .env.*
 
-# Markdown docs (kept local only, not pushed to repo)
+# Markdown docs (kept local only, not pushed to repo) — except the top-level README
 *.md
+!/README.md
 
 # OS / editor
 .DS_Store
