@@ -27,6 +27,64 @@
   color: var(--text-h);
 }
 
+.analyze-form__field-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cv-mode-toggle {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.cv-mode-toggle button {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.cv-mode-toggle button.active {
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.pdf-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 200px;
+  padding: 12px 14px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+}
+
+.pdf-upload input[type='file'] {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text);
+}
+
+.pdf-upload__filename {
+  font-size: 13px;
+  color: var(--text-h);
+}
+
+.pdf-upload__error {
+  font-size: 13px;
+  color: var(--danger);
+}
+
 .analyze-form__field textarea {
   font-family: var(--sans);
   font-size: 14px;

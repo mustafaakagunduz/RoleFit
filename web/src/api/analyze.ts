@@ -29,6 +29,15 @@ export interface ProblemDetails {
   status?: number
 }
 
+async function parseFitResultResponse(response: Response): Promise<FitResult> {
+  if (!response.ok) {
+    const problem = (await response.json().catch(() => null)) as ProblemDetails | null
+    throw new Error(problem?.detail ?? `Analiz başarısız oldu (${response.status}).`)
+  }
+
+  return response.json() as Promise<FitResult>
+}
+
 export async function analyze(request: AnalyzeRequest): Promise<FitResult> {
   const response = await fetch('/api/analyze', {
     method: 'POST',
@@ -36,10 +45,18 @@ export async function analyze(request: AnalyzeRequest): Promise<FitResult> {
     body: JSON.stringify(request),
   })
 
-  if (!response.ok) {
-    const problem = (await response.json().catch(() => null)) as ProblemDetails | null
-    throw new Error(problem?.detail ?? `Analiz başarısız oldu (${response.status}).`)
-  }
+  return parseFitResultResponse(response)
+}
 
-  return response.json() as Promise<FitResult>
+export async function analyzePdf(cvFile: File, jobDescription: string): Promise<FitResult> {
+  const formData = new FormData()
+  formData.append('cvFile', cvFile)
+  formData.append('jobDescription', jobDescription)
+
+  const response = await fetch('/api/analyze/pdf', {
+    method: 'POST',
+    body: formData,
+  })
+
+  return parseFitResultResponse(response)
 }
